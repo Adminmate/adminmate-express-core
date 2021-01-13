@@ -12,7 +12,7 @@ const accessControl = (req, res, next) => {
   next();
 };
 
-const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, authorizedIps, devMode, api }) => {
+const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, authorizedIps, api }) => {
   global._amConfig = {};
   global._amConfig.projectId = projectId;
   global._amConfig.secretKey = secretKey;
@@ -20,7 +20,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   global._amConfig.masterPassword = masterPassword;
   global._amConfig.models = models;
   global._amConfig.authorizedIps = authorizedIps || null;
-  global._amConfig.devMode = devMode || false;
+  global._amConfig.devMode = !!global.AM_DEV_MODE;
 
   router.use(cookieParser());
   router.use(accessControl);
