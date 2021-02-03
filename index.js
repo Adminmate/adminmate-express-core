@@ -33,23 +33,23 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   router.post('/api/login', isAuthorizedIP, authController.login);
 
   // Get models list
-  router.get('/api/model', isAuthorizedIP, isAuthorized, api.getModels);
-  router.get('/api/model/properties', isAuthorizedIP, isAuthorized, api.getModelsProperties);
+  router.get('/api/models', isAuthorizedIP, isAuthorized, api.getModels);
+  router.get('/api/models/properties', isAuthorizedIP, isAuthorized, api.getModelsProperties);
 
   // Get available Smart Actions for the items list
-  router.get('/api/model/smartactions', isAuthorizedIP, isAuthorized, api.getSmartActions);
-  router.get('/api/model/:model/smartactions', isAuthorizedIP, isAuthorized, api.getSmartAction);
+  router.get('/api/models/smartactions', isAuthorizedIP, isAuthorized, api.getSmartActions);
+  router.get('/api/models/:model/smartactions', isAuthorizedIP, isAuthorized, api.getSmartAction);
 
   // Segments
-  router.get('/api/model/segments', isAuthorizedIP, isAuthorized, api.getSegments);
+  router.get('/api/models/segments', isAuthorizedIP, isAuthorized, api.getSegments);
 
   // CRUD endpoints
-  router.post('/api/model/:model', isAuthorizedIP, isAuthorized, api.modelGet);
-  router.post('/api/model/:model/autocomplete', isAuthorizedIP, isAuthorized, api.modelGetAutocomplete);
-  router.post('/api/model/:model/:id', isAuthorizedIP, isAuthorized, api.modelGetOne);
-  router.post('/api/model/:model/create', isAuthorizedIP, isAuthorized, api.modelPostOne);
-  router.put('/api/model/:model/:id', isAuthorizedIP, isAuthorized, api.modelPutOne);
-  router.delete('/api/model/:model', isAuthorizedIP, isAuthorized, api.modelDeleteSome);
+  router.post('/api/models/:model', isAuthorizedIP, isAuthorized, api.modelGet);
+  router.post('/api/models/:model/autocomplete', isAuthorizedIP, isAuthorized, api.modelGetAutocomplete);
+  router.post('/api/models/:model/:id', isAuthorizedIP, isAuthorized, api.modelGetOne);
+  router.post('/api/models/:model/create', isAuthorizedIP, isAuthorized, api.modelPostOne);
+  router.put('/api/models/:model/:id', isAuthorizedIP, isAuthorized, api.modelPutOne);
+  router.delete('/api/models/:model', isAuthorizedIP, isAuthorized, api.modelDeleteSome);
 
   // Custom query
   router.post('/api/query', isAuthorizedIP, isAuthorized, api.modelCustomQuery);

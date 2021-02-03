@@ -20,7 +20,7 @@ module.exports.isAuthorized = (req, res, next) => {
       }
 
       req.permData = decoded_permToken.data;
-      console.log('====decoded_permToken', decoded_permToken.data);
+      // console.log('====decoded_permToken', decoded_permToken.data);
     }
 
     if (modelPermToken) {
@@ -31,7 +31,7 @@ module.exports.isAuthorized = (req, res, next) => {
       }
 
       req.modelPermData = decoded_modelPermToken.data;
-      console.log('====decoded_modelPermToken', decoded_modelPermToken.data);
+      // console.log('====decoded_modelPermToken', decoded_modelPermToken.data);
     }
 
     next();
