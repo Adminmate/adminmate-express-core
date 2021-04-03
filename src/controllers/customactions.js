@@ -27,7 +27,7 @@ module.exports.getMatching = api => {
     const items = req.query.ids || '';
     const target = req.query.target || '';
 
-    if (!items || !['item', 'bulk'].includes(target)) {
+    if (!items || typeof items !== 'string' || !target || !['item', 'bulk'].includes(target)) {
       return res.status(403).json({ message: 'Invalid request' });
     }
 
@@ -57,7 +57,7 @@ module.exports.getMatching = api => {
     const itemsArray = items.split(',');
 
     // Get corresponding items
-    const itemsDB = await api.modelGetIn(itemsArray);
+    const itemsDB = await api.modelGetIn(modelName, itemsArray);
 
     if (!itemsDB) {
       return res.json({ list: actionsList });

@@ -22,7 +22,7 @@ const amConfig = {
   models: [],
   api: {
     modelGetAll: (req, res) => {},
-    modelGetIn: ids => {},
+    modelGetIn: (modelName, ids) => {},
     modelGetOne: (req, res) => {},
     modelPostOne: (req, res) => {},
     modelPutOne: (req, res) => {},
