@@ -1,8 +1,15 @@
 const router = require('express').Router();
 const cookieParser = require('cookie-parser');
+
+// Middlewares
+const { isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
+
+// Controllers
 const authController = require('./src/controllers/auth');
 const installController = require('./src/controllers/install');
-const { isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
+const modelsCtrl = require('./src/controllers/models');
+const customActionsCtrl = require('./src/controllers/customactions');
+const segmentsCtrl = require('./src/controllers/segments');
 
 const accessControl = (req, res, next) => {
   const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://my.adminmate.io';
@@ -32,19 +39,19 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   // Login
   router.post('/api/login', isAuthorizedIP, authController.login);
 
-  // Get models list
-  router.get('/api/models', isAuthorizedIP, isAuthorized, api.getModels);
-  router.get('/api/models/properties', isAuthorizedIP, isAuthorized, api.getModelsProperties);
+  // Models
+  router.get('/api/models', isAuthorizedIP, isAuthorized, modelsCtrl.getModels(api));
+  router.get('/api/models/properties', isAuthorizedIP, isAuthorized, modelsCtrl.getModelsProperties(api));
 
-  // Get available Smart Actions for the items list
-  router.get('/api/models/smartactions', isAuthorizedIP, isAuthorized, api.getSmartActions);
-  router.get('/api/models/:model/smartactions', isAuthorizedIP, isAuthorized, api.getSmartAction);
+  // Custom Actions
+  router.get('/api/models/customactions', isAuthorizedIP, isAuthorized, customActionsCtrl.getAll(api));
+  router.get('/api/models/:model/customactions', isAuthorizedIP, isAuthorized, customActionsCtrl.getMatching(api));
 
   // Segments
-  router.get('/api/models/segments', isAuthorizedIP, isAuthorized, api.getSegments);
+  router.get('/api/models/segments', isAuthorizedIP, isAuthorized, segmentsCtrl.getAll);
 
   // CRUD endpoints
-  router.post('/api/models/:model', isAuthorizedIP, isAuthorized, api.modelGet);
+  router.post('/api/models/:model', isAuthorizedIP, isAuthorized, api.modelGetAll);
   router.post('/api/models/:model/autocomplete', isAuthorizedIP, isAuthorized, api.modelGetAutocomplete);
   router.post('/api/models/:model/:id', isAuthorizedIP, isAuthorized, api.modelGetOne);
   router.post('/api/models/:model/create', isAuthorizedIP, isAuthorized, api.modelPostOne);
