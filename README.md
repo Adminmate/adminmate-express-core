@@ -1,12 +1,16 @@
 # adminmate-express-core
 
-Adminmate is a tool allowing you to create your customizable administration panel in a few minutes.
+Adminmate is a tool allowing you to create customizable administration panels from your SQL/NoSQL databases.
 
-Adminmate has been built to fit tiny projects to bigger one.
+The project has been built to fit tiny projects to bigger one.
 
 ## Getting started
 
 [https://adminmate.io](https://adminmate.io)
+
+## Databases compatibility
+
+We only manage **MySQL** & **MongoDB** database for the moment. However we are working hard on adding *PostgreSQL* soon.
 
 ## Features
 
