@@ -23,6 +23,7 @@ module.exports.getModels = api => {
     global._amConfig.models.forEach(modelConfig => {
       const modelObject = {
         slug: modelConfig.slug,
+        realname: api.getModelRealname(modelConfig.model),
         properties: api.getModelProperties(modelConfig.model),
         customactions: [],
         segments: []
