@@ -46,6 +46,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   // Custom Actions
   router.get('/api/models/customactions', isAuthorizedIP, isAuthorized, customActionsCtrl.getAll(api));
   router.get('/api/models/:model/customactions', isAuthorizedIP, isAuthorized, customActionsCtrl.getMatching(api));
+  router.post('/api/models/:model/customactions/:ca', isAuthorizedIP, isAuthorized, customActionsCtrl.execute);
 
   // Segments
   router.get('/api/models/segments', isAuthorizedIP, isAuthorized, segmentsCtrl.getAll);

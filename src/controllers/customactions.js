@@ -95,3 +95,29 @@ module.exports.getMatching = api => {
     });
   };
 };
+
+module.exports.execute = (req, res) => {
+  const modelSlug = req.params.model;
+  const caCode = req.params.ca;
+
+  const matchingModel = global._amConfig.models.find(m => m.slug === modelSlug);
+  if (!matchingModel || !matchingModel.customActions || !Array.isArray(matchingModel.customActions)) {
+    return res.status(403).json({ message: 'Invalid model' });
+  }
+
+  const matchingAction = matchingModel.customActions.find(ca => ca.code === caCode);
+  if (!matchingAction || !matchingAction.handler || typeof matchingAction.handler !== 'function') {
+    return res.status(403).json({ message: 'Invalid model' });
+  }
+
+  matchingAction.handler(
+    req.body.item_ids,
+    req.body.data,
+    message => {
+      res.json({ message: message || 'Success!' });
+    },
+    message => {
+      res.status(403).json({ message: message || 'Error!' });
+    }
+  );
+};
