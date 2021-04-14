@@ -113,11 +113,11 @@ module.exports.execute = (req, res) => {
   matchingAction.handler(
     req.body.item_ids,
     req.body.data,
-    message => {
-      res.json({ message: message || 'Success!' });
+    json => {
+      res.json(json || {});
     },
-    message => {
-      res.status(403).json({ message: message || 'Error!' });
+    json => {
+      res.status(403).json(json || {});
     }
   );
 };
