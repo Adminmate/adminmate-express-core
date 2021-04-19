@@ -1,26 +1,5 @@
 const fnHelper = require('../helpers/functions');
 
-module.exports.getAll = api => {
-  return (req, res) => {
-    const list = [];
-
-    global._amConfig.models.forEach(modelConfig => {
-      const currentModelCustomActions = fnHelper.getModelCustomActions(modelConfig.slug);
-      if (currentModelCustomActions && currentModelCustomActions.length) {
-        currentModelCustomActions.map(sa => {
-          list.push({
-            model: modelConfig.slug,
-            label: sa.label,
-            code: sa.code
-          });
-        });
-      }
-    });
-
-    res.json({ list });
-  };
-};
-
 module.exports.getMatching = api => {
   return async (req, res) => {
     const modelName = req.params.model;

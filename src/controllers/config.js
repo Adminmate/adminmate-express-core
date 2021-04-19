@@ -1,25 +1,7 @@
-module.exports.getModelsProperties = api => {
+module.exports.getConfig = api => {
   return (req, res) => {
-    const modelsProperties = [];
-
-    global._amConfig.models.forEach(modelConfig => {
-      const modelProperties = api.getModelProperties(modelConfig.model);
-      modelProperties.map(property => {
-        modelsProperties.push({
-          model: modelConfig.slug,
-          path: property.path
-        });
-      });
-    });
-
-    res.json({ properties: modelsProperties });
-  };
-};
-
-module.exports.getModels = api => {
-  return (req, res) => {
-    let models = [];
-
+    // Models list
+    const models = [];
     global._amConfig.models.forEach(modelConfig => {
       const modelObject = {
         slug: modelConfig.slug,
@@ -42,6 +24,20 @@ module.exports.getModels = api => {
       models.push(modelObject);
     });
 
-    res.json({ models });
+    // Charts list
+    const charts = [];
+    if (global._amConfig.charts.length) {
+      global._amConfig.charts.map(chartConfig => {
+        charts.push({
+          code: chartConfig.code,
+          label: chartConfig.label
+        });
+      });
+    }
+
+    res.json({
+      models,
+      charts
+    });
   };
 };

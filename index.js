@@ -7,9 +7,8 @@ const { isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
 // Controllers
 const authController = require('./src/controllers/auth');
 const installController = require('./src/controllers/install');
-const modelsCtrl = require('./src/controllers/models');
+const configCtrl = require('./src/controllers/config');
 const customActionsCtrl = require('./src/controllers/customactions');
-const segmentsCtrl = require('./src/controllers/segments');
 
 const accessControl = (req, res, next) => {
   const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://my.adminmate.io';
@@ -22,13 +21,14 @@ const accessControl = (req, res, next) => {
 // Endpoints prefix
 const endpointPrefix = '/adminmate/api';
 
-const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, authorizedIps, api }) => {
+const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps, api }) => {
   global._amConfig = {};
   global._amConfig.projectId = projectId;
   global._amConfig.secretKey = secretKey;
   global._amConfig.authKey = authKey;
   global._amConfig.masterPassword = masterPassword;
-  global._amConfig.models = models;
+  global._amConfig.models = models || [];
+  global._amConfig.charts = charts || [];
   global._amConfig.authorizedIps = authorizedIps || null;
   global._amConfig.devMode = !!global.AM_DEV_MODE;
 
@@ -42,17 +42,12 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, auth
   // Login
   router.post(`${endpointPrefix}/login`, isAuthorizedIP, authController.login);
 
-  // Models
-  router.get(`${endpointPrefix}/models`, isAuthorizedIP, isAuthorized, modelsCtrl.getModels(api));
-  router.get(`${endpointPrefix}/models/properties`, isAuthorizedIP, isAuthorized, modelsCtrl.getModelsProperties(api));
+  // Config
+  router.get(`${endpointPrefix}/config`, isAuthorizedIP, isAuthorized, configCtrl.getConfig(api));
 
   // Custom Actions
-  router.get(`${endpointPrefix}/models/customactions`, isAuthorizedIP, isAuthorized, customActionsCtrl.getAll(api));
   router.get(`${endpointPrefix}/models/:model/customactions`, isAuthorizedIP, isAuthorized, customActionsCtrl.getMatching(api));
   router.post(`${endpointPrefix}/models/:model/customactions/:ca`, isAuthorizedIP, isAuthorized, customActionsCtrl.execute);
-
-  // Segments
-  router.get(`${endpointPrefix}/models/segments`, isAuthorizedIP, isAuthorized, segmentsCtrl.getAll);
 
   // CRUD endpoints
   router.post(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, api.modelGetAll);
