@@ -9,6 +9,7 @@ const authController = require('./src/controllers/auth');
 const installController = require('./src/controllers/install');
 const configCtrl = require('./src/controllers/config');
 const customActionsCtrl = require('./src/controllers/customactions');
+const chartsCtrl = require('./src/controllers/charts');
 
 const accessControl = (req, res, next) => {
   const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://my.adminmate.io';
@@ -59,6 +60,9 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
 
   // Custom query
   router.post(`${endpointPrefix}/query`, isAuthorizedIP, isAuthorized, api.modelCustomQuery);
+
+  // Execute custom charts
+  router.post(`${endpointPrefix}/charts/:chart_code`, isAuthorizedIP, isAuthorized, chartsCtrl.execute);
 
   return router;
 };
