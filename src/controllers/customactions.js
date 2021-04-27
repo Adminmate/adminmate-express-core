@@ -67,10 +67,15 @@ module.exports.getMatching = api => {
     // We only keep valid custom actions
     const finalCustomActions = customActionsFilteredByTarget.filter(sa => sa.passFilter === true);
 
+    // If there is both the native delete action and other custom actions, add a separator
+    if (actionsList.length && finalCustomActions.length) {
+      actionsList.unshift({ type: 'separator' });
+    }
+
     res.json({
       list: [
-        ...actionsList,
-        ...finalCustomActions
+        ...finalCustomActions,
+        ...actionsList
       ]
     });
   };
