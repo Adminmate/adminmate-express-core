@@ -17,17 +17,18 @@ module.exports.getMatching = api => {
 
     // Get model options
     const currentModelOptions = fnHelper.getModelOptions(modelName);
-    const cannotDelete = currentModelOptions && currentModelOptions.canDelete === false;
+    const authorizedToDeleteRegardingOptions = currentModelOptions && currentModelOptions.canDelete === true;
+    const authorizedToDelete = req.modelPermData && req.modelPermData.can_delete === true;
 
     const actionsList = [];
-    if (!cannotDelete) {
+    if (authorizedToDeleteRegardingOptions && authorizedToDelete) {
       actionsList.push({
-        label: target === 'item' ? 'Delete item' : 'Delete items',
+        label: target === 'item' ? 'Delete' : 'Delete selected',
         code: 'delete'
       });
     }
 
-    const currentModelCustomActions = fnHelper.getModelCustomActions(modelName);
+    const currentModelCustomActions = fnHelper.getModelCustomActions(modelName, req.modelPermData.can_use_custom_actions);
     if (!currentModelCustomActions || currentModelCustomActions.length === 0) {
       return res.json({ list: actionsList });
     }

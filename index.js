@@ -11,6 +11,9 @@ const configCtrl = require('./src/controllers/config');
 const customActionsCtrl = require('./src/controllers/customactions');
 const chartsCtrl = require('./src/controllers/charts');
 
+// Helpers
+const fnHelper = require('./src/helpers/functions');
+
 const accessControl = (req, res, next) => {
   const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://my.adminmate.io';
   res.header('Access-Control-Allow-Origin', origin);
@@ -28,7 +31,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   global._amConfig.secretKey = secretKey;
   global._amConfig.authKey = authKey;
   global._amConfig.masterPassword = masterPassword;
-  global._amConfig.models = models || [];
+  global._amConfig.models = fnHelper.initModels(models || []);
   global._amConfig.charts = charts || [];
   global._amConfig.authorizedIps = authorizedIps || null;
   global._amConfig.devMode = !!global.AM_DEV_MODE;
