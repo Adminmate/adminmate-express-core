@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 
 // Middlewares
 const { isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
+const perm = require('./src/middlewares/perm');
 
 // Controllers
 const authController = require('./src/controllers/auth');
@@ -51,15 +52,15 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
 
   // Custom Actions
   router.get(`${endpointPrefix}/models/:model/customactions`, isAuthorizedIP, isAuthorized, customActionsCtrl.getMatching(api));
-  router.post(`${endpointPrefix}/models/:model/customactions/:ca`, isAuthorizedIP, isAuthorized, customActionsCtrl.execute);
+  router.post(`${endpointPrefix}/models/:model/customactions/:ca`, isAuthorizedIP, isAuthorized, perm.canExecuteCA, customActionsCtrl.execute);
 
   // CRUD endpoints
-  router.post(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, api.modelGetAll);
+  router.post(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, api.modelGetAll);
   router.post(`${endpointPrefix}/models/:model/autocomplete`, isAuthorizedIP, isAuthorized, api.modelGetAutocomplete);
-  router.post(`${endpointPrefix}/models/:model/create`, isAuthorizedIP, isAuthorized, api.modelPostOne);
-  router.post(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, api.modelGetOne);
-  router.put(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, api.modelPutOne);
-  router.delete(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, api.modelDeleteSome);
+  router.post(`${endpointPrefix}/models/:model/create`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canCreate, api.modelPostOne);
+  router.post(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, api.modelGetOne);
+  router.put(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canUpdate, api.modelPutOne);
+  router.delete(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canDelete, api.modelDeleteSome);
 
   // Custom query
   router.post(`${endpointPrefix}/query`, isAuthorizedIP, isAuthorized, api.modelCustomQuery);

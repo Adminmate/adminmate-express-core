@@ -20,7 +20,6 @@ module.exports.isAuthorized = (req, res, next) => {
       }
 
       req.permData = decoded_permToken.data;
-      // console.log('====decoded_permToken', decoded_permToken.data);
     }
 
     if (modelPermToken) {
@@ -30,8 +29,12 @@ module.exports.isAuthorized = (req, res, next) => {
         return res.status(403).json({ code: 'not_authorized' });
       }
 
+      // Check if the model is matching with the one in the permissions token
+      if (req.params.model && (!decoded_modelPermToken.data.model || decoded_modelPermToken.data.model !== req.params.model)) {
+        return res.status(403).json({ code: 'not_authorized' });
+      }
+
       req.modelPermData = decoded_modelPermToken.data;
-      // console.log('====decoded_modelPermToken', decoded_modelPermToken.data);
     }
 
     next();
