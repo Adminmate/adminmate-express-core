@@ -15,7 +15,7 @@ module.exports.initModels = models => {
       slug: m.slug,
       model: m.model,
       segments: m.segments || [],
-      customActions: m.customActions || [],
+      actions: m.actions || [],
       options: {
         canCreate: m.options && typeof m.options.canCreate === 'boolean' ? m.options.canCreate : true,
         canUpdate: m.options && typeof m.options.canUpdate === 'boolean' ? m.options.canUpdate : true,
@@ -44,17 +44,17 @@ module.exports.getModelOptions = modelCode => {
   return currentModel.options;
 };
 
-module.exports.getModelCustomActions = (modelCode, onlyIn) => {
+module.exports.getModelActions = (modelCode, onlyIn) => {
   const currentModel = getModel(modelCode);
   if (!currentModel) {
     return null;
   }
 
   if (onlyIn && Array.isArray(onlyIn) && !onlyIn.includes('*')) {
-    return currentModel.customActions.filter(ca => onlyIn.includes(ca.code));
+    return currentModel.actions.filter(action => onlyIn.includes(action.code));
   }
 
-  return currentModel.customActions;
+  return currentModel.actions;
 };
 
 

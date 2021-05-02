@@ -7,14 +7,14 @@ module.exports.getConfig = api => {
         slug: modelConfig.slug,
         realname: api.getModelRealname(modelConfig.model),
         properties: api.getModelProperties(modelConfig.model),
-        customactions: [],
+        actions: [],
         segments: [],
         options: modelConfig.options
       };
 
-      // Add custom actions if present
-      if (modelConfig.customActions) {
-        modelObject.customactions = modelConfig.customActions.map(ca => ({ label: ca.label, code: ca.code }));
+      // Add actions if present
+      if (modelConfig.actions) {
+        modelObject.actions = modelConfig.actions.map(action => ({ label: action.label, code: action.code }));
       }
 
       // Add segments if present

@@ -28,8 +28,8 @@ module.exports.getMatching = api => {
       });
     }
 
-    const currentModelCustomActions = fnHelper.getModelCustomActions(modelName, req.modelPermData.can_use_custom_actions);
-    if (!currentModelCustomActions || currentModelCustomActions.length === 0) {
+    const currentModelActions = fnHelper.getModelActions(modelName, req.modelPermData.can_use_actions);
+    if (!currentModelActions || currentModelActions.length === 0) {
       return res.json({ list: actionsList });
     }
 
@@ -44,7 +44,7 @@ module.exports.getMatching = api => {
     }
 
     // Filter by target
-    const customActionsFilteredByTarget = currentModelCustomActions
+    const actionsFilteredByTarget = currentModelActions
       .filter(sa => {
         const isStringAndValid = typeof sa.target === 'string' && sa.target === target;
         const isArrayAndValid = Array.isArray(sa.target) && sa.target.includes(target);
@@ -56,25 +56,25 @@ module.exports.getMatching = api => {
       });
 
     itemsDB.forEach(item => {
-      customActionsFilteredByTarget.forEach(sa => {
-        // If the filter do not pass, remove the custom actions from the list
+      actionsFilteredByTarget.forEach(sa => {
+        // If the filter do not pass, remove the actions from the list
         if (typeof sa.filter === 'function' && sa.filter(item) === false) {
           sa.passFilter = false;
         }
       });
     });
 
-    // We only keep valid custom actions
-    const finalCustomActions = customActionsFilteredByTarget.filter(sa => sa.passFilter === true);
+    // We only keep valid actions
+    const finalActions = actionsFilteredByTarget.filter(sa => sa.passFilter === true);
 
-    // If there is both the native delete action and other custom actions, add a separator
-    if (actionsList.length && finalCustomActions.length) {
+    // If there is both the native delete action and other actions, add a separator
+    if (actionsList.length && finalActions.length) {
       actionsList.unshift({ type: 'separator' });
     }
 
     res.json({
       list: [
-        ...finalCustomActions,
+        ...finalActions,
         ...actionsList
       ]
     });
@@ -86,11 +86,11 @@ module.exports.execute = (req, res) => {
   const caCode = req.params.ca;
 
   const matchingModel = global._amConfig.models.find(m => m.slug === modelSlug);
-  if (!matchingModel || !matchingModel.customActions || !Array.isArray(matchingModel.customActions)) {
+  if (!matchingModel || !matchingModel.actions || !Array.isArray(matchingModel.actions)) {
     return res.status(403).json({ message: 'Invalid model' });
   }
 
-  const matchingAction = matchingModel.customActions.find(ca => ca.code === caCode);
+  const matchingAction = matchingModel.actions.find(action => action.code === caCode);
   if (!matchingAction || !matchingAction.handler || typeof matchingAction.handler !== 'function') {
     return res.status(403).json({ message: 'Invalid model' });
   }

@@ -9,7 +9,7 @@ const perm = require('./src/middlewares/perm');
 const authController = require('./src/controllers/auth');
 const installController = require('./src/controllers/install');
 const configCtrl = require('./src/controllers/config');
-const customActionsCtrl = require('./src/controllers/customactions');
+const actionsCtrl = require('./src/controllers/actions');
 const chartsCtrl = require('./src/controllers/charts');
 
 // Helpers
@@ -50,9 +50,9 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   // Config
   router.get(`${endpointPrefix}/config`, isAuthorizedIP, isAuthorized, configCtrl.getConfig(api));
 
-  // Custom Actions
-  router.get(`${endpointPrefix}/models/:model/customactions`, isAuthorizedIP, isAuthorized, customActionsCtrl.getMatching(api));
-  router.post(`${endpointPrefix}/models/:model/customactions/:ca`, isAuthorizedIP, isAuthorized, perm.canExecuteCA, customActionsCtrl.execute);
+  // Actions
+  router.get(`${endpointPrefix}/models/:model/actions`, isAuthorizedIP, isAuthorized, actionsCtrl.getMatching(api));
+  router.post(`${endpointPrefix}/models/:model/actions/:ca`, isAuthorizedIP, isAuthorized, perm.canExecuteCA, actionsCtrl.execute);
 
   // CRUD endpoints
   router.post(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, api.modelGetAll);

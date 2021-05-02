@@ -2,8 +2,8 @@ module.exports.canExecuteCA = (req, res, next) => {
   const caCode = req.params.ca;
 
   const authorizedCA = caCode && (
-    req.modelPermData.can_use_custom_actions.includes('*') ||
-    req.modelPermData.can_use_custom_actions.includes(caCode)
+    req.modelPermData.can_use_actions.includes('*') ||
+    req.modelPermData.can_use_actions.includes(caCode)
   );
 
   if (authorizedCA) {

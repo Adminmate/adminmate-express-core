@@ -16,7 +16,7 @@ We only manage **MySQL** & **MongoDB** databases for the moment. However, we are
 
 Adminmate comes with all the features you need for your administration panel:
 * **CRUD**: Create-Read-Update-Delete actions
-* **Custom Actions**: Add your business custom logic
+* **Actions**: Add your business custom logic
 * **Segments**: Create unlimited data segments
 * **Dashboard**: Create charts from your data, directly from the Adminmate Dashboard or via our extensible API
 * **Team-based access**: Control who can create-read-update-delete the data and access to your dashboards & graphs
