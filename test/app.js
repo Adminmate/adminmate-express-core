@@ -33,6 +33,6 @@ const amConfig = {
 };
 
 const plugin = require('../index.js');
-app.use('/adminmate', plugin.init(amConfig));
+app.use(plugin.init(amConfig));
 
 module.exports = app;
