@@ -7,6 +7,7 @@ module.exports.getConfig = api => {
         slug: modelConfig.slug,
         realname: api.getModelRealname(modelConfig.model),
         properties: api.getModelProperties(modelConfig.model),
+        relationships: api.getModelRelationships(modelConfig.model),
         actions: [],
         segments: [],
         options: modelConfig.options
