@@ -7,7 +7,6 @@ const perm = require('./src/middlewares/perm');
 
 // Controllers
 const authController = require('./src/controllers/auth');
-const installController = require('./src/controllers/install');
 const configCtrl = require('./src/controllers/config');
 const actionsCtrl = require('./src/controllers/actions');
 const chartsCtrl = require('./src/controllers/charts');
@@ -39,10 +38,6 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
 
   router.use(`${endpointPrefix}/`, cookieParser());
   router.use(`${endpointPrefix}/`, accessControl);
-
-  // Installation checks
-  router.post(`${endpointPrefix}/check_connection`, installController.checkConnection);
-  router.post(`${endpointPrefix}/check_models`, installController.checkModels);
 
   // Login
   router.post(`${endpointPrefix}/login`, isAuthorizedIP, authController.login);
