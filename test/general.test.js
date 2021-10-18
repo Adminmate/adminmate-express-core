@@ -22,22 +22,6 @@ beforeAll(done => {
   done();
 });
 
-// check_connection
-describe('Testing POST /api/check_connection', () => {
-  it('should return a 403 http response', async () => {
-    // Make request
-    const response = await supertest(app)
-      .post(prefix + '/check_connection')
-      .send({
-        // data: ''
-      });
-
-    // Check response
-    expect(response.status).toBe(403);
-    expect(response.body.message).toBe('Invalid request');
-  });
-});
-
 // login
 describe('Testing POST /api/login', () => {
   it('should return a 403 http response', async () => {
