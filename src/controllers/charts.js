@@ -19,7 +19,7 @@ module.exports.execute = (req, res) => {
   matchingChart.handler(
     req.body.data,
     json => {
-      res.json(json || {});
+      res.json({ chart: json || null });
     },
     json => {
       res.status(403).json(json || {});
