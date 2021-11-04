@@ -1,8 +1,8 @@
-# adminmate-express-core
+# Adminmate Core (Express.js)
 
-Adminmate is a tool allowing you to create customizable administration panels from your SQL/NoSQL databases.
-
-The project has been built to fit tiny projects to bigger ones.
+Adminmate is a powerful & flexible back-office solution build for small to big teams. ✌️
+It provides an extremely flexible API developed in NodeJS that communicate with a powerful frontend back-office we host.
+As the security & privacy of your data is our main focus, the Data API is host by yourself and secured by your own credentials.
 
 ## Getting started
 
@@ -10,17 +10,29 @@ The project has been built to fit tiny projects to bigger ones.
 
 ## Databases compatibility
 
-We only manage **MySQL** & **MongoDB** databases for the moment. However, we are working hard on adding *PostgreSQL* soon.
+Adminmate is compatible with the most famous database systems like **MySQL**, **PostgreSQL**, **SQLite** and **MongoDB**. We are working hard on adding more soon!
 
 ## Features
 
-Adminmate comes with all the features you need for your administration panel:
-* **CRUD**: Create-Read-Update-Delete actions
-* **Actions**: Add your business custom logic
-* **Segments**: Create unlimited data segments
-* **Dashboard**: Create charts from your data, directly from the Adminmate Dashboard or via our extensible API
-* **Team-based access**: Control who can create-read-update-delete the data and access to your dashboards & graphs
+Adminmate comes with all the features you need for your back-office:
+* **Data**: Data Explorer, CRUD, Filters, Segments, Actions
+* **Dashboards & Charts**: Unlimited Dashboards & Charts
+* **Collaboration**: Powerful collaboration tool
+* **Activity**: Track everything that happening on your database data
+* **Access Control**: Team-based Access Control
+
+### Data explorer
+
+![Alt text](https://adminmate.io/github/list-screen.svg)
+
+### Dashboards & Charts
+
+![Alt text](https://adminmate.io/github/homepage-screen.svg)
+
+### Activity
+
+![Alt text](https://adminmate.io/github/activity-screen.svg)
 
 ## Who are the contributors ?
 
-The project has been created by **Marc Delalonde** and aims to stay an *independent project, driven by the community*.
+Adminmate is a bootstrapped project tailored by **Marc Delalonde** and aims to stay an *independent project, driven by the community*.
