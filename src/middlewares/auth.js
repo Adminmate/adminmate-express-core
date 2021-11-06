@@ -1,9 +1,9 @@
 const jwt = require('jwt-simple');
 
 module.exports.isAuthorized = (req, res, next) => {
-  const accessToken = req.headers['x-access-token'];
-  const permToken = req.headers['x-perm-token'];
-  const modelPermToken = req.headers['x-model-perm-token'];
+  const accessToken = req.headers['am-admin-token'];
+  const permToken = req.headers['am-admin-perm-token'];
+  const modelPermToken = req.headers['am-admin-model-perm-token'];
 
   try {
     const decoded_accessToken = jwt.decode(accessToken, global._amConfig.authKey);

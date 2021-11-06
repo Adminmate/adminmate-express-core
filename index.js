@@ -3,6 +3,7 @@ const cookieParser = require('cookie-parser');
 
 // Middlewares
 const { isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
+const { parseQuery } = require('./src/middlewares/guard');
 const perm = require('./src/middlewares/perm');
 
 // Controllers
@@ -17,7 +18,7 @@ const fnHelper = require('./src/helpers/functions');
 const accessControl = (req, res, next) => {
   const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://app.adminmate.io';
   res.header('Access-Control-Allow-Origin', origin);
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, X-Access-Token, X-Perm-Token, X-Model-Perm-Token');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, AM-Admin-Token, AM-Admin-Perm-Token, AM-Admin-Model-Perm-Token, AM-Model-Fields, AM-Ref-Fields');
   res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
   next();
 };
@@ -50,10 +51,10 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   router.post(`${endpointPrefix}/models/:model/actions/:ca`, isAuthorizedIP, isAuthorized, perm.canExecuteCA, actionsCtrl.execute);
 
   // CRUD endpoints
-  router.post(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, api.modelGetAll);
-  router.post(`${endpointPrefix}/models/:model/autocomplete`, isAuthorizedIP, isAuthorized, api.modelGetAutocomplete);
+  router.get(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, parseQuery, api.modelGetAll);
+  router.get(`${endpointPrefix}/models/:model/autocomplete`, isAuthorizedIP, isAuthorized, parseQuery, api.modelGetAutocomplete);
   router.post(`${endpointPrefix}/models/:model/create`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canCreate, api.modelPostOne);
-  router.post(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, api.modelGetOne);
+  router.get(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, parseQuery, api.modelGetOne);
   router.put(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canUpdate, api.modelPutOne);
   router.delete(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canDelete, api.modelDeleteSome);
 
