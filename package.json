@@ -3,6 +3,18 @@
   "version": "1.1.4",
   "description": "Adminmate Express Core",
   "author": "Marc Delalonde",
+  "homepage": "http://adminmate.io",
+  "license": "GPL-3.0",
+  "keywords": [
+    "adminmate",
+    "admin",
+    "panel",
+    "interface",
+    "back-office",
+    "mysql",
+    "mongodb",
+    "postgresql"
+  ],
   "scripts": {
     "start": "node ./index",
     "test": "jest --testTimeout=10000 --verbose"
