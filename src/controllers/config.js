@@ -3,11 +3,16 @@ module.exports.getConfig = api => {
     // Models list
     const models = [];
     global._amConfig.models.forEach(modelConfig => {
+      // Get model primary keys
+      const primaryKeys = api.getModelPrimaryKeys(modelConfig.model);
+
       const modelObject = {
         slug: modelConfig.slug,
         realname: api.getModelRealname(modelConfig.model),
         properties: api.getModelProperties(modelConfig.model),
         relationships: api.getModelRelationships(modelConfig.model),
+        idField: primaryKeys.length > 1 ? 'amCompositeId' : primaryKeys[0],
+        primaryKeys,
         actions: [],
         segments: [],
         options: modelConfig.options
@@ -37,9 +42,13 @@ module.exports.getConfig = api => {
       });
     }
 
+    // App config
+    const appConfig = api.getAppConfig();
+
     res.json({
       models,
-      charts
+      charts,
+      app: appConfig
     });
   };
 };

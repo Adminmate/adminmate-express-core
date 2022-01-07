@@ -9,14 +9,14 @@ module.exports.isAuthorized = (req, res, next) => {
     const decoded_accessToken = jwt.decode(accessToken, global._amConfig.authKey);
 
     if (!decoded_accessToken || !decoded_accessToken.exp_date) {
-      return res.status(403).json({ code: 'not_authorized' });
+      return res.status(403).json({ code: 'not_authorized', type: 'access_token' });
     }
 
     if (permToken) {
       const decoded_permToken = jwt.decode(permToken, global._amConfig.secretKey);
 
       if (!decoded_permToken || !decoded_permToken.exp_date) {
-        return res.status(403).json({ code: 'not_authorized' });
+        return res.status(403).json({ code: 'not_authorized', type: 'perm_token' });
       }
 
       req.permData = decoded_permToken.data;
@@ -26,12 +26,12 @@ module.exports.isAuthorized = (req, res, next) => {
       const decoded_modelPermToken = jwt.decode(modelPermToken, global._amConfig.secretKey);
 
       if (!decoded_modelPermToken || !decoded_modelPermToken.exp_date) {
-        return res.status(403).json({ code: 'not_authorized' });
+        return res.status(403).json({ code: 'not_authorized', type: 'model_perm_token' });
       }
 
       // Check if the model is matching with the one in the permissions token
       if (req.params.model && (!decoded_modelPermToken.data.model || decoded_modelPermToken.data.model !== req.params.model)) {
-        return res.status(403).json({ code: 'not_authorized' });
+        return res.status(403).json({ code: 'not_authorized', type: 'model_perm_token' });
       }
 
       req.modelPermData = decoded_modelPermToken.data;

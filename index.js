@@ -11,6 +11,7 @@ const authController = require('./src/controllers/auth');
 const configCtrl = require('./src/controllers/config');
 const actionsCtrl = require('./src/controllers/actions');
 const chartsCtrl = require('./src/controllers/charts');
+const exportCtrl = require('./src/controllers/export');
 
 // Helpers
 const fnHelper = require('./src/helpers/functions');
@@ -57,6 +58,9 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   router.get(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, parseQuery, api.modelGetOne);
   router.put(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canUpdate, api.modelPutOne);
   router.delete(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canDelete, api.modelDeleteSome);
+
+  // Other endpoints
+  router.post(`${endpointPrefix}/models/:model/export_csv`, isAuthorizedIP, isAuthorized, perm.canAccessModel, exportCtrl.exportCSV(api));
 
   // Custom query
   router.post(`${endpointPrefix}/query`, isAuthorizedIP, isAuthorized, api.modelCustomQuery);

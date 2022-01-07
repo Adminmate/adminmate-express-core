@@ -21,6 +21,15 @@ module.exports.getMatching = api => {
     const authorizedToDelete = req.modelPermData && req.modelPermData.can_delete === true;
 
     const actionsList = [];
+
+    // Add export ability
+    if (target === 'bulk') {
+      actionsList.push({
+        label: 'Export CSV',
+        code: 'export_csv'
+      });
+    }
+
     if (authorizedToDeleteRegardingOptions && authorizedToDelete) {
       actionsList.push({
         label: target === 'item' ? 'Delete' : 'Delete selected',
