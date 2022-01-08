@@ -2,7 +2,7 @@ const fnHelper = require('../helpers/functions');
 
 module.exports.getMatching = api => {
   return async (req, res) => {
-    const modelName = req.params.model;
+    const modelSlug = req.params.model;
     const items = req.query.ids || '';
     const target = req.query.target || '';
 
@@ -10,13 +10,13 @@ module.exports.getMatching = api => {
       return res.status(403).json({ message: 'Invalid request' });
     }
 
-    const currentModel = fnHelper.getModelObject(modelName);
+    const currentModel = fnHelper.getModelObject(modelSlug);
     if (!currentModel || !items) {
       return res.status(403).json({ message: 'Invalid request' });
     }
 
     // Get model options
-    const currentModelOptions = fnHelper.getModelOptions(modelName);
+    const currentModelOptions = fnHelper.getModelOptions(modelSlug);
     const authorizedToDeleteRegardingOptions = currentModelOptions && currentModelOptions.canDelete === true;
     const authorizedToDelete = req.modelPermData && req.modelPermData.can_delete === true;
 
@@ -37,7 +37,7 @@ module.exports.getMatching = api => {
       });
     }
 
-    const currentModelActions = fnHelper.getModelActions(modelName, req.modelPermData.can_use_actions);
+    const currentModelActions = fnHelper.getModelActions(modelSlug, req.modelPermData.can_use_actions);
     if (!currentModelActions || currentModelActions.length === 0) {
       return res.json({ list: actionsList });
     }
@@ -46,7 +46,7 @@ module.exports.getMatching = api => {
     const itemsArray = items.split(',');
 
     // Get corresponding items
-    const itemsDB = await api.modelGetIn(modelName, itemsArray);
+    const itemsDB = await api.modelGetIn(modelSlug, itemsArray);
 
     if (!itemsDB) {
       return res.json({ list: actionsList });
@@ -90,28 +90,43 @@ module.exports.getMatching = api => {
   };
 };
 
-module.exports.execute = (req, res) => {
-  const modelSlug = req.params.model;
-  const caCode = req.params.ca;
+module.exports.getExecute = api => {
+  return (req, res) => {
+    const modelSlug = req.params.model;
+    const caCode = req.params.ca;
 
-  const matchingModel = global._amConfig.models.find(m => m.slug === modelSlug);
-  if (!matchingModel || !matchingModel.actions || !Array.isArray(matchingModel.actions)) {
-    return res.status(403).json({ message: 'Invalid model' });
-  }
-
-  const matchingAction = matchingModel.actions.find(action => action.code === caCode);
-  if (!matchingAction || !matchingAction.handler || typeof matchingAction.handler !== 'function') {
-    return res.status(403).json({ message: 'Invalid model' });
-  }
-
-  matchingAction.handler(
-    req.body.item_ids,
-    req.body.data,
-    json => {
-      res.json(json || {});
-    },
-    json => {
-      res.status(403).json(json || {});
+    const currentModel = fnHelper.getModelObject(modelSlug);
+    if (!currentModel) {
+      return res.status(403).json({ message: 'Invalid request' });
     }
-  );
+
+    const matchingModel = global._amConfig.models.find(m => m.slug === modelSlug);
+    if (!matchingModel || !matchingModel.actions || !Array.isArray(matchingModel.actions)) {
+      return res.status(403).json({ message: 'Invalid model' });
+    }
+
+    const matchingAction = matchingModel.actions.find(action => action.code === caCode);
+    if (!matchingAction || !matchingAction.handler || typeof matchingAction.handler !== 'function') {
+      return res.status(403).json({ message: 'Invalid model' });
+    }
+
+    // Construct where clause
+    const whereClause = api.getModelWhereClause(currentModel, req.body.item_ids);
+
+    const attrs = {
+      ids: req.body.item_ids,
+      data: req.body.data,
+      whereClause
+    };
+
+    matchingAction.handler(
+      attrs,
+      json => {
+        res.json(json || {});
+      },
+      json => {
+        res.status(403).json(json || {});
+      }
+    );
+  };
 };
