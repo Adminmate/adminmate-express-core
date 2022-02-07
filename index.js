@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 // Middlewares
@@ -16,12 +17,12 @@ const exportCtrl = require('./src/controllers/export');
 // Helpers
 const fnHelper = require('./src/helpers/functions');
 
-const accessControl = (req, res, next) => {
-  const origin = global._amConfig.devMode ? 'http://localhost:3002' : 'https://app.adminmate.io';
-  res.header('Access-Control-Allow-Origin', origin);
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, AM-Admin-Token, AM-Admin-Perm-Token, AM-Admin-Model-Perm-Token, AM-Model-Fields, AM-Ref-Fields');
-  res.header('Access-Control-Allow-Methods', 'PUT, POST, GET, DELETE, OPTIONS');
-  next();
+// Access control config
+const accessControl = () => {
+  return cors({
+    origin: [/\.adminmate\.io$/, /localhost:\d{4}$/],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'AM-Admin-Token', 'AM-Admin-Perm-Token', 'AM-Admin-Model-Perm-Token', 'AM-Model-Fields', 'AM-Ref-Fields'],
+  });
 };
 
 // Endpoints prefix
@@ -39,7 +40,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   global._amConfig.devMode = !!global.AM_DEV_MODE;
 
   router.use(`${endpointPrefix}/`, cookieParser());
-  router.use(`${endpointPrefix}/`, accessControl);
+  router.use(`${endpointPrefix}/`, accessControl());
 
   // Login
   router.post(`${endpointPrefix}/login`, isAuthorizedIP, authController.login);
