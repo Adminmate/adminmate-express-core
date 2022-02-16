@@ -11,5 +11,9 @@ module.exports.parseQuery = (req, res, next) => {
   if (req.query.segment) {
     req.query.segment = JSON.parse(req.query.segment);
   }
+  // If passed, check if the ids parameter is an array
+  if (req.query.ids && !Array.isArray(req.query.ids)) {
+    return res.status(403).json();
+  }
   next();
 };

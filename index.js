@@ -55,6 +55,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   // CRUD endpoints
   router.get(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, parseQuery, api.modelGetAll);
   router.get(`${endpointPrefix}/models/:model/autocomplete`, isAuthorizedIP, isAuthorized, parseQuery, api.modelGetAutocomplete);
+  router.get(`${endpointPrefix}/models/:model/refs`, isAuthorizedIP, isAuthorized, parseQuery, api.modelGetRefs);
   router.post(`${endpointPrefix}/models/:model/create`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canCreate, api.modelPostOne);
   router.get(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, parseQuery, api.modelGetOne);
   router.put(`${endpointPrefix}/models/:model/:id`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canUpdate, api.modelPutOne);
