@@ -3,7 +3,7 @@ const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
 // Middlewares
-const { isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
+const { loginCheck, isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
 const { parseQuery } = require('./src/middlewares/guard');
 const perm = require('./src/middlewares/perm');
 
@@ -43,7 +43,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   router.use(`${endpointPrefix}/`, accessControl());
 
   // Login
-  router.post(`${endpointPrefix}/login`, isAuthorizedIP, authController.login);
+  router.post(`${endpointPrefix}/login`, isAuthorizedIP, loginCheck, authController.login);
 
   // Config
   router.get(`${endpointPrefix}/config`, isAuthorizedIP, isAuthorized, configCtrl.getConfig(api));
