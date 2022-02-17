@@ -24,6 +24,7 @@ const amConfig = {
     modelGetAll: (req, res) => {},
     modelGetIn: (modelName, ids) => {},
     modelGetOne: (req, res) => {},
+    modelGetRefs: (req, res) => {},
     modelPostOne: (req, res) => {},
     modelPutOne: (req, res) => {},
     modelDeleteSome: (req, res) => {},
