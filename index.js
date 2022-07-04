@@ -1,21 +1,5 @@
-const router = require('express').Router();
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-
-// Middlewares
-const { loginCheck, isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth');
-const { parseQuery } = require('./src/middlewares/guard');
-const perm = require('./src/middlewares/perm');
-
-// Controllers
-const authController = require('./src/controllers/auth');
-const configCtrl = require('./src/controllers/config');
-const actionsCtrl = require('./src/controllers/actions');
-const chartsCtrl = require('./src/controllers/charts');
-const exportCtrl = require('./src/controllers/export');
-
-// Helpers
-const fnHelper = require('./src/helpers/functions');
 
 // Access control config
 const accessControl = () => {
@@ -25,19 +9,43 @@ const accessControl = () => {
   });
 };
 
+const initModels = models => {
+  return models.map(m => {
+    const defaultModelConfig = {
+      slug: m.slug,
+      model: m.model,
+      segments: m.segments || [],
+      actions: m.actions || [],
+      options: {
+        canCreate: m.options && typeof m.options.canCreate === 'boolean' ? m.options.canCreate : true,
+        canUpdate: m.options && typeof m.options.canUpdate === 'boolean' ? m.options.canUpdate : true,
+        canDelete: m.options && typeof m.options.canDelete === 'boolean' ? m.options.canDelete : true
+      }
+    };
+    return defaultModelConfig;
+  });
+};
+
 // Endpoints prefix
 const endpointPrefix = '/adminmate/api';
 
-const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, charts, authorizedIps, api }) => {
-  global._amConfig = {};
-  global._amConfig.projectId = projectId;
-  global._amConfig.secretKey = secretKey;
-  global._amConfig.authKey = authKey;
-  global._amConfig.masterPassword = masterPassword;
-  global._amConfig.models = fnHelper.initModels(models || []);
-  global._amConfig.charts = charts || [];
-  global._amConfig.authorizedIps = authorizedIps || null;
-  global._amConfig.devMode = !!global.AM_DEV_MODE;
+const Adminmate = ({ config, api }) => {
+  const _conf = { ...config };
+  _conf.models = initModels(_conf.models || []);
+
+  // Middlewares
+  const { loginCheck, isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth')(_conf);
+  const { parseQuery } = require('./src/middlewares/guard');
+  const perm = require('./src/middlewares/perm');
+
+  // Controllers
+  const authController = require('./src/controllers/auth')(_conf);
+  const configCtrl = require('./src/controllers/config')(_conf, api);
+  const actionsCtrl = require('./src/controllers/actions')(_conf, api);
+  const chartsCtrl = require('./src/controllers/charts')(_conf);
+  const exportCtrl = require('./src/controllers/export')(_conf, api);
+
+  const router = require('express').Router();
 
   router.use(`${endpointPrefix}/`, cookieParser());
   router.use(`${endpointPrefix}/`, accessControl());
@@ -46,11 +54,11 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   router.post(`${endpointPrefix}/login`, isAuthorizedIP, loginCheck, authController.login);
 
   // Config
-  router.get(`${endpointPrefix}/config`, isAuthorizedIP, isAuthorized, configCtrl.getConfig(api));
+  router.get(`${endpointPrefix}/config`, isAuthorizedIP, isAuthorized, configCtrl.getConfig);
 
   // Actions
-  router.get(`${endpointPrefix}/models/:model/actions`, isAuthorizedIP, isAuthorized, actionsCtrl.getMatching(api));
-  router.post(`${endpointPrefix}/models/:model/actions/:ca`, isAuthorizedIP, isAuthorized, perm.canExecuteCA, actionsCtrl.getExecute(api));
+  router.get(`${endpointPrefix}/models/:model/actions`, isAuthorizedIP, isAuthorized, actionsCtrl.getMatching);
+  router.post(`${endpointPrefix}/models/:model/actions/:ca`, isAuthorizedIP, isAuthorized, perm.canExecuteCA, actionsCtrl.getExecute);
 
   // CRUD endpoints
   router.get(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, parseQuery, api.modelGetAll);
@@ -62,7 +70,7 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
   router.delete(`${endpointPrefix}/models/:model`, isAuthorizedIP, isAuthorized, perm.canAccessModel, perm.canDelete, api.modelDeleteSome);
 
   // Other endpoints
-  router.post(`${endpointPrefix}/models/:model/export_csv`, isAuthorizedIP, isAuthorized, perm.canAccessModel, exportCtrl.exportCSV(api));
+  router.post(`${endpointPrefix}/models/:model/export_csv`, isAuthorizedIP, isAuthorized, perm.canAccessModel, exportCtrl.exportCSV);
 
   // Custom query
   router.post(`${endpointPrefix}/query`, isAuthorizedIP, isAuthorized, api.modelCustomQuery);
@@ -74,6 +82,5 @@ const Adminmate = ({ projectId, secretKey, authKey, masterPassword, models, char
 };
 
 module.exports = {
-  init: Adminmate,
-  isAuthorized,
+  init: Adminmate
 };

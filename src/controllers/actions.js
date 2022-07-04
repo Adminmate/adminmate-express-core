@@ -1,7 +1,7 @@
-const fnHelper = require('../helpers/functions');
+module.exports = (_conf, api) => {
+  const fnHelper = require('../helpers/functions')(_conf);
 
-module.exports.getMatching = api => {
-  return async (req, res) => {
+  const getMatching = async (req, res) => {
     const modelSlug = req.params.model;
     const items = req.query.ids || '';
     const target = req.query.target || '';
@@ -88,10 +88,8 @@ module.exports.getMatching = api => {
       ]
     });
   };
-};
 
-module.exports.getExecute = api => {
-  return (req, res) => {
+  const getExecute = (req, res) => {
     const modelSlug = req.params.model;
     const caCode = req.params.ca;
 
@@ -100,7 +98,7 @@ module.exports.getExecute = api => {
       return res.status(403).json({ message: 'Invalid request' });
     }
 
-    const matchingModel = global._amConfig.models.find(m => m.slug === modelSlug);
+    const matchingModel = _conf.models.find(m => m.slug === modelSlug);
     if (!matchingModel || !matchingModel.actions || !Array.isArray(matchingModel.actions)) {
       return res.status(403).json({ message: 'Invalid model' });
     }
@@ -129,4 +127,9 @@ module.exports.getExecute = api => {
       }
     );
   };
+
+  return {
+    getMatching,
+    getExecute
+  }
 };

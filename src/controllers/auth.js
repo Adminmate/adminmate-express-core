@@ -1,22 +1,32 @@
 const jwt = require('jwt-simple');
 
-module.exports.login = async (req, res) => {
-  const { password } = req.body;
+module.exports = _conf => {
+  const login = async (req, res) => {
+    const { password } = req.body;
 
-  if (!password) {
-    return res.status(403).json({ message: 'Invalid request' });
-  }
+    if (!password) {
+      return res.status(403).json({ message: 'Invalid request' });
+    }
 
-  if (password !== global._amConfig.masterPassword) {
-    return res.status(403).json({ message: 'Invalid master password' });
-  }
+    if (password !== _conf.masterPassword) {
+      return res.status(403).json({ message: 'Invalid master password' });
+    }
 
-  // Generate the Admin token
-  const expireDays = 7;
-  const expDate = Date.now() + (24 * expireDays * 1000);
-  const adminToken = jwt.encode({ exp_date: expDate }, global._amConfig.authKey);
+    // Generate the Admin token
+    const expireDays = 7;
+    const expDate = Date.now() + (24 * expireDays * 1000);
+    const tokenData = {
+      exp_date: expDate,
+      project_id: _conf.projectId
+    };
+    const adminToken = jwt.encode(tokenData, _conf.authKey);
 
-  res.json({
-    admin_token: adminToken
-  });
+    res.json({
+      admin_token: adminToken
+    });
+  };
+
+  return {
+    login
+  };
 };

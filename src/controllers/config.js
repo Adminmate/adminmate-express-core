@@ -1,8 +1,9 @@
-module.exports.getConfig = api => {
-  return (req, res) => {
+
+module.exports = (_conf, api) => {
+  const getConfig = (req, res) => {
     // Models list
     const models = [];
-    global._amConfig.models.forEach(modelConfig => {
+    _conf.models.forEach(modelConfig => {
       // Get model primary keys
       const primaryKeys = api.getModelPrimaryKeys(modelConfig.model);
 
@@ -33,8 +34,8 @@ module.exports.getConfig = api => {
 
     // Charts list
     const charts = [];
-    if (global._amConfig.charts.length) {
-      global._amConfig.charts.map(chartConfig => {
+    if (_conf.charts.length) {
+      _conf.charts.map(chartConfig => {
         charts.push({
           code: chartConfig.code,
           label: chartConfig.label
@@ -50,5 +51,9 @@ module.exports.getConfig = api => {
       charts,
       app: appConfig
     });
+  };
+
+  return {
+    getConfig
   };
 };

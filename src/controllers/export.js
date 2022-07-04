@@ -1,8 +1,9 @@
 const { Parser } = require('json2csv');
-const fnHelper = require('../helpers/functions');
 
-module.exports.exportCSV = api => {
-  return async (req, res) => {
+module.exports = (_conf, api) => {
+  const fnHelper = require('../helpers/functions')(_conf);
+
+  const exportCSV = async (req, res) => {
     const modelName = req.params.model;
     const itemIds = req.body.data.ids;
 
@@ -34,5 +35,9 @@ module.exports.exportCSV = api => {
       data: finalCsv,
       filename: `export-${modelName}.csv`
     });
+  };
+
+  return {
+    exportCSV
   };
 };
