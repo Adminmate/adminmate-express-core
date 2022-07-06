@@ -3,34 +3,36 @@ module.exports = (_conf, api) => {
   const getConfig = (req, res) => {
     // Models list
     const models = [];
-    _conf.models.forEach(modelConfig => {
-      // Get model primary keys
-      const primaryKeys = api.getModelPrimaryKeys(modelConfig.model);
+    _conf.models
+      .filter(modelConfig => !!modelConfig.model)
+      .forEach(modelConfig => {
+        // Get model primary keys
+        const primaryKeys = api.getModelPrimaryKeys(modelConfig.model);
 
-      const modelObject = {
-        slug: modelConfig.slug,
-        realname: api.getModelRealname(modelConfig.model),
-        properties: api.getModelProperties(modelConfig.model),
-        relationships: api.getModelRelationships(modelConfig.model),
-        idField: primaryKeys.length > 1 ? 'amCompositeId' : primaryKeys[0],
-        primaryKeys,
-        actions: [],
-        segments: [],
-        options: modelConfig.options
-      };
+        const modelObject = {
+          slug: modelConfig.slug,
+          realname: api.getModelRealname(modelConfig.model),
+          properties: api.getModelProperties(modelConfig.model),
+          relationships: api.getModelRelationships(modelConfig.model),
+          idField: primaryKeys.length > 1 ? 'amCompositeId' : primaryKeys[0],
+          primaryKeys,
+          actions: [],
+          segments: [],
+          options: modelConfig.options
+        };
 
-      // Add actions if present
-      if (modelConfig.actions) {
-        modelObject.actions = modelConfig.actions.map(action => ({ label: action.label, code: action.code }));
-      }
+        // Add actions if present
+        if (modelConfig.actions) {
+          modelObject.actions = modelConfig.actions.map(action => ({ label: action.label, code: action.code }));
+        }
 
-      // Add segments if present
-      if (modelConfig.segments) {
-        modelObject.segments = modelConfig.segments.map(segment => ({ label: segment.label, code: segment.code }));
-      }
+        // Add segments if present
+        if (modelConfig.segments) {
+          modelObject.segments = modelConfig.segments.map(segment => ({ label: segment.label, code: segment.code }));
+        }
 
-      models.push(modelObject);
-    });
+        models.push(modelObject);
+      });
 
     // Charts list
     const charts = [];
