@@ -84,4 +84,4 @@ describe('Testing POST /api/login', () => {
 // After all
 afterAll(done => {
   done();
-})
+});

@@ -29,7 +29,7 @@ module.exports = _conf => {
       catch(e) {
         return res.status(403).json({ code: 'not_authorized' });
       }
-    }, 2000);
+    }, _conf.testMode ? 0 : 2000);
   };
 
   const isAuthorized = (req, res, next) => {

@@ -12,12 +12,15 @@ app.use(express.urlencoded({
 
 // Init
 const amConfig = {
-  projectId: '6037b459cbb0f63c219789eb',
-  secretKey: '7dn6m0zrcsqta5b57hug52xlira4upqdempch65mwy5guehr33vt0r1s8cyrnmko',
-  authKey: 'authkey_secret',
-  masterPassword: 'demo-password',
-  devMode: true, // If you want to be in dev mode
-  models: [],
+  config: {
+    projectId: '6037b459cbb0f63c219789eb',
+    secretKey: '7dn6m0zrcsqta5b57hug52xlira4upqdempch65mwy5guehr33vt0r1s8cyrnmko',
+    authKey: 'authkey_secret',
+    masterPassword: 'demo-password',
+    devMode: true, // If you want to be in dev mode
+    testMode: true,
+    models: []
+  },
   api: {
     modelGetAll: (req, res) => {},
     modelGetIn: (modelName, ids) => {},

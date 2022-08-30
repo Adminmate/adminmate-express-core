@@ -14,7 +14,7 @@ module.exports = _conf => {
 
     // Generate the Admin token
     const expireDays = 7;
-    const expDate = Date.now() + (24 * expireDays * 1000);
+    const expDate = Date.now() + (expireDays * 24 * 3600 * 1000);
     const tokenData = {
       exp_date: expDate,
       project_id: _conf.projectId
