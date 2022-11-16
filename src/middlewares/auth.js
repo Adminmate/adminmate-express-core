@@ -1,6 +1,8 @@
 const jwt = require('jwt-simple');
 
-module.exports = _conf => {
+module.exports = (_conf, api) => {
+  const appConfig = api.getAppConfig();
+
   const loginCheck = (req, res, next) => {
     const accessToken = req.body.loginToken;
 
@@ -41,14 +43,14 @@ module.exports = _conf => {
       const decoded_accessToken = jwt.decode(accessToken, _conf.authKey);
 
       if (!decoded_accessToken || !decoded_accessToken.exp_date || decoded_accessToken.project_id !== _conf.projectId) {
-        return res.status(403).json({ code: 'not_authorized', type: 'access_token' });
+        return res.status(403).json({ code: 'not_authorized', type: 'access_token', app: appConfig });
       }
 
       if (permToken) {
         const decoded_permToken = jwt.decode(permToken, _conf.secretKey);
 
         if (!decoded_permToken || !decoded_permToken.exp_date) {
-          return res.status(403).json({ code: 'not_authorized', type: 'perm_token' });
+          return res.status(403).json({ code: 'not_authorized', type: 'perm_token', app: appConfig });
         }
 
         req.permData = decoded_permToken.data;
@@ -58,12 +60,12 @@ module.exports = _conf => {
         const decoded_modelPermToken = jwt.decode(modelPermToken, _conf.secretKey);
 
         if (!decoded_modelPermToken || !decoded_modelPermToken.exp_date) {
-          return res.status(403).json({ code: 'not_authorized', type: 'model_perm_token' });
+          return res.status(403).json({ code: 'not_authorized', type: 'model_perm_token', app: appConfig });
         }
 
         // Check if the model is matching with the one in the permissions token
         if (req.params.model && (!decoded_modelPermToken.data.model || decoded_modelPermToken.data.model !== req.params.model)) {
-          return res.status(403).json({ code: 'not_authorized', type: 'model_perm_token' });
+          return res.status(403).json({ code: 'not_authorized', type: 'model_perm_token', app: appConfig });
         }
 
         req.modelPermData = decoded_modelPermToken.data;
@@ -72,7 +74,7 @@ module.exports = _conf => {
       next();
     }
     catch(e) {
-      return res.status(403).json({ code: 'not_authorized' });
+      return res.status(403).json({ code: 'not_authorized', app: appConfig });
     }
   };
 
@@ -83,7 +85,7 @@ module.exports = _conf => {
       if (_conf.devMode === true || _conf.authorizedIps.includes(currIp)) {
         return next();
       }
-      res.status(403).json({ code: 'not_authorized_ip' });
+      res.status(403).json({ code: 'not_authorized_ip', app: appConfig });
     }
     else {
       next();

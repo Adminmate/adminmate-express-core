@@ -34,7 +34,7 @@ const Adminmate = ({ config, api }) => {
   _conf.models = initModels(_conf.models || []);
 
   // Middlewares
-  const { loginCheck, isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth')(_conf);
+  const { loginCheck, isAuthorized, isAuthorizedIP } = require('./src/middlewares/auth')(_conf, api);
   const { parseQuery } = require('./src/middlewares/guard');
   const perm = require('./src/middlewares/perm');
 

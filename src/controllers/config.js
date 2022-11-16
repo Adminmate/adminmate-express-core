@@ -47,10 +47,12 @@ module.exports = (_conf, api) => {
 
     // App config
     const appConfig = api.getAppConfig();
+    const features = api.getAvailableFeatures();
 
     res.json({
       models,
       charts,
+      features,
       app: appConfig
     });
   };
