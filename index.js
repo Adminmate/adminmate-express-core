@@ -45,8 +45,10 @@ const Adminmate = ({ config, api }) => {
   const chartsCtrl = require('./src/controllers/charts')(_conf);
   const exportCtrl = require('./src/controllers/export')(_conf, api);
 
-  const router = require('express').Router();
+  const express = require('express');
+  const router = express.Router();
 
+  router.use(`${endpointPrefix}/`, express.json());
   router.use(`${endpointPrefix}/`, cookieParser());
   router.use(`${endpointPrefix}/`, accessControl());
 
