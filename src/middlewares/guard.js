@@ -5,6 +5,9 @@ module.exports.parseQuery = (req, res, next) => {
   if (req.headers['am-ref-fields'] && typeof req.headers['am-ref-fields'] === 'string') {
     req.headers['am-ref-fields'] = JSON.parse(req.headers['am-ref-fields']);
   }
+  if (req.headers['am-inline-actions'] && typeof req.headers['am-inline-actions'] === 'string') {
+    req.headers['am-inline-actions'] = JSON.parse(req.headers['am-inline-actions']);
+  }
   if (req.query.filters && typeof req.query.filters === 'string') {
     req.query.filters = JSON.parse(req.query.filters);
   }

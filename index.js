@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const accessControl = () => {
   return cors({
     origin: [/\.adminmate\.io$/, /localhost:\d{4}$/],
-    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'AM-Admin-Token', 'AM-Admin-Perm-Token', 'AM-Admin-Model-Perm-Token', 'AM-Model-Fields', 'AM-Ref-Fields'],
+    allowedHeaders: ['Origin', 'X-Requested-With', 'Content-Type', 'Accept', 'AM-Admin-Token', 'AM-Admin-Perm-Token', 'AM-Admin-Model-Perm-Token', 'AM-Model-Fields', 'AM-Ref-Fields', 'AM-Inline-Actions'],
   });
 };
 
